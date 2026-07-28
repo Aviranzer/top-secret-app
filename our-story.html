@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הסיפור שלנו</title>
+    <!-- PageFlip JS & CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #1a1a1a;
+            background-image: radial-gradient(#2c2c2c 1px, transparent 0);
+            background-size: 24px 24px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        .container {
+            position: relative;
+            padding: 20px;
+        }
+
+        /* הטריק המרכזי: היפוך כל הספר אופקית כדי שהדפדוף יהיה RTL */
+        #book-container {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background-color: #fcf8f2;
+            transform: scaleX(-1); /* היפוך מראה לספר */
+        }
+
+        /* החזרת התוכן בתוך העמודים לכיוון המקורי שלו */
+        .page-wrapper {
+            transform: scaleX(-1); /* היפוך מראה חזרה לטקסט */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Base Page Styles */
+        .page {
+            background-color: #fcf8f2;
+            background-image: linear-gradient(to left, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0) 10%);
+            padding: 40px 30px;
+            overflow: hidden;
+            border: 1px solid #e2d9cc;
+        }
+
+        /* Cover Page */
+        .page-cover {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #f1d77a;
+            text-align: center;
+            border: 4px solid #b89742;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.4);
+        }
+
+        .page-cover .page-wrapper {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page-cover h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .page-cover p {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+        }
+
+        .page-cover .decorative-line {
+            width: 60%;
+            height: 2px;
+            background-color: #b89742;
+            margin: 20px 0;
+        }
+
+        /* Inner Page Layout */
+        .page-content {
+            flex-grow: 1;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .chapter-title {
+            font-size: 1.4rem;
+            color: #1e3c72;
+            border-bottom: 2px solid #1e3c72;
+            padding-bottom: 8px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        .page-footer {
+            font-size: 0.85rem;
+            color: #888;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button {
+            background-color: #2a5298;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        button:hover {
+            background-color: #1e3c72;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* End Page */
+        .end-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .end-page h2 {
+            font-size: 2rem;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="book-container">
+            
+            <!-- כריכה -->
+            <div class="page page-cover" data-density="hard">
+                <div class="page-wrapper">
+                    <h1>הסיפור שלנו</h1>
+                    <div class="decorative-line"></div>
+                    <p>מיה & אבירן</p>
+                </div>
+            </div>
+
+            <!-- עמוד 1 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <div class="chapter-title">פרק ראשון: איך הכל התחיל? אבל באמת</div>
+                        <p>הכל התחיל בשיחת טלפון. אני הייתי באותו הזמן במסעדה ביוון עם המשפחה שלי, רקדנו, שתינו, אכלנו, ופתאום אבא שלי מגיע עם הטלפון ביד ואומר לי ״אבירן יש פה מישהי שרוצה לדבר איתך״. אני מסתכל על הטלפון, וזאת שיחת וידאו מיוסי חיון, אבל בתמונה אני בכלל רואה בחורה עם כובע ורוד. זה בטוח לא יוסי.</p>
+                        <p>הם היו בסירה של יוסי לא שמעתי כלום, לא היה לי מושג מי זאת, ובעיקר היה מאוד מביך. זאת הייתה שיחה בין שני אנשים שלא שומעים אחד את השנייה, ולא מבינים למה הם מדברים.</p>
+                    </div>
+                    <div class="page-footer">1</div>
+                </div>
+            </div>
+
+            <!-- עמוד 2 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>זה הרגיש כמו זוג הורים שהולכים לפארק עם הילד שלהם, רואים ילד אחר באותו גיל ואומרים להם: ״הנה, הוא ילד בגיל שלך. לכו תשחקו״.</p>
+                        <p>״היא אומרת שהיא משרתת איתך בבסיס״, יוסי אמר, ואני כיווצתי את העיניים לנסות לזהות מי זאת. זאת הייתה קצינת הרציפו״ת של הבסיס. באמת דיברנו קצת.</p>
+                        <p>אני המשכתי בחיים שלי כרגיל. והיא? לא יודע.</p>
+                    </div>
+                    <div class="page-footer">2</div>
+                </div>
+            </div>
+
+            <!-- עמוד 3 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <div class="chapter-title">פרק שני: מה יהיה מחר?</div>
+                        <p>בדרך חזור לארץ כבר הבנתי שכנראה אצטרך לנסוע לבסיס, בשונה ממה שחשבתי שיקרה. נפל טיל במג׳דל שמס, ויש אירוע גדול. זה פגע בדיוק במגרש כדורגל ויש כמה ילדים הרוגים.</p>
+                        <p>לי בכלל היו תוכניות אחרות, תכננתי לחזור הביתה, לעשות איזה שנ״צ קטן ואפילו קבעתי לי דייט לערב. אבל תוכניות לחוד ומציאות לחוד.</p>
+                        <p>נסעתי לטייסת, לבשתי את הסרבל, נכנסתי לחדר התדריכים, והבנתי - מתחילים מלחמה עם חיזבאללה.</p>
+                    </div>
+                    <div class="page-footer">3</div>
+                </div>
+            </div>
+
+            <!-- עמוד 4 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>מהר מאוד שמתי את כובע הרציפו״ת והתחלתי לעבוד. השיחות בינינו היו בהתחלה רגילות. כשהמצב המבצעי התחמם, השיחות הפכו למאוד תכופות - כולם עזבו את הבסיס ורק אנחנו נשארנו. קצינת רציפו״ת אחת לקצין רציפו״ת אחד.</p>
+                        <p>דיברנו הרבה, בהתחלה על עבודה, ואחר כך גם קצת מעבר. היא הייתה יפה, חייכנית, חכמה ומלאת שמחת חיים.</p>
+                        <p>וככה זה המשיך. משיחה לשיחה. מסיבוב מפ״טים אחד לשני. בכל אופציה שהייתה לי לדבר איתה עשיתי את זה.</p>
+                    </div>
+                    <div class="page-footer">4</div>
+                </div>
+            </div>
+
+            <!-- עמוד 5 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>אחרי כמה ימים בודדים זה כבר היה לי ברור. הייתי עם כהנא במפ״ט אבירן ואמרתי לו: ״שמע, נראה לי שאני הולך על זה״. והוא ענה לי ״תעדכן איך היה״.</p>
+                        <p>דיברנו וקבענו שנשב. הבטחתי שאביא לה קפה, נשב ונדבר. נדבר על עבודה כמובן. אבל גם פה הדברים לא קרו לפי התוכנית והוזנקתי לטיסה. הלכתי אבל הבטחתי לה שאנחנו נשב ונשתה קפה ביחד יחד.</p>
+                        <p>וככה באמת היה. יום למחרת התקשרתי אליה ואמרתי לה שאני עוד חייב לה קפה. בקטע מקצועי כמובן. הכנתי קפה נסעתי אליה.</p>
+                    </div>
+                    <div class="page-footer">5</div>
+                </div>
+            </div>
+
+            <!-- עמוד 6 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>ישבנו בנוף 29, ישבנו ודיברנו, היה מאוד כיף. כל כך כיף עד שהיא לא שתתה אפילו לא שלוק מהקפה. טוב אולי זה לא קשור, אולי זה סתם כי הכנתי לקפה לא טעים.</p>
+                        <p>לא כל כך ידעתי איך לגשת, ניסיתי להתקרב אבל הקפה שלה היה בינינו. קיוויתי שהיא תזיז אותו אבל היא לא עשתה את זה. בשלב מסוים כבר לא יכולתי לחכות, אזרתי אומץ ושאלתי אותה ״אנחנו מתכוונים להתנשק או מה?״. ואז זה קרה.</p>
+                        <p>זאת הייתה תחושה פשוט נהדרת. מיליון פרפרים שפשוט עפים לי בתוך הגוף ועוד שנייה מתפרצים החוצה.</p>
+                    </div>
+                    <div class="page-footer">6</div>
+                </div>
+            </div>
+
+            <!-- עמוד 7 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>החזרתי אותה למגורים. עצרתי. כל הפרפרים עוד היו מסביבנו. ברקע התנגן השיר ״מה יהיה מחר״ של פאר טסי.</p>
+                        <p>שנינו חשבנו בדיוק על אותו דבר - זה השיר שמתאר בדיוק את הסיטואציה שלנו, וזה יהיה השיר שלנו.</p>
+                        <br>
+                        <div class="chapter-title">פרק 3: יש חגיגה</div>
+                        <p>משם הקשר התפתח מהר מאוד. לגור ביחד בדירה שהיא רק שלנו, מפ״ט אבירן. עיצבנו אותו יפה. היה בו מיטה זוגית, מראות בצורת משושים, עציץ קטן, ואפילו מנורה מרחפת. וזה היה שלנו.</p>
+                    </div>
+                    <div class="page-footer">7</div>
+                </div>
+            </div>
+
+            <!-- עמוד 8 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>ישנו ביחד כל לילה. דיברנו, צוקנו, צפינו בפרנדס, והיו עוד כמה דברים שאולי לא נכון שאני אכתוב בספר הזה.</p>
+                        <p>כשהלחימה קצת נרגעה היא באה אליי לכרמיאל, וידעתי שהיא אוהבת סושי, אז לקחתי אותה לבימה בכרמיאל. זה היה אירוע קצת מוזר, היו שם קצת צעקות מהמטבח, ומישהי שרצתה שנגן עליה מאיזה מישהו שעובר ליד המסעדה.</p>
+                        <p>״אני אפצה אותך, אני אקח אותך למקום הרבה יותר טוב״, אמרתי, ״יש להם את הסושי הכי טעים בעולם, ויש שם חבר כחול אז זה אוטומטית הופך את זה ל-30% טעים יותר״.</p>
+                    </div>
+                    <div class="page-footer">8</div>
+                </div>
+            </div>
+
+            <!-- עמוד 9 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>נסענו הביתה ישבנו קצת על הספה ופתאום אבא שלי הגיע. היא הובכה נורא, אבל זה שלב שצריך לעבור.</p>
+                        <p>אחרי כמה ימים נסענו לתל אביב. לקחתי אותה למקום שהבטחתי לה שאקח אותה - MOON. הזמנו את המנות הכי טובות, ובכל זאת היא לא אהבה. כששאלתי אותה ״למה את לא אוהבת?״ היא אמרה שהיא אוהבת סושי רגיל והסושי במון הוא מיוחד מדי.</p>
+                        <p>טוב, אחרי הכל אין דבר כזה בן אדם מושלם. נראה לי שמצאתי מה הפגם שלה - לא אוהבת סושי טעים.</p>
+                    </div>
+                    <div class="page-footer">9</div>
+                </div>
+            </div>
+
+            <!-- עמוד 10 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>ואיך אפשר לשכוח את המסיבה הראשונה שלנו ביחד, פעם ראשונה שאנחנו יוצאים לבלות וגם שותים אלכוהול. המסיבה הייתה של בנות החבוקבע של טייסת 105. הגענו ורקדנו, שרנו, התחבקנו ופתאום היא נעלמה.</p>
+                        <p>לא הבנתי איפה היא. חששתי שהיא יושבת לבד ולא נהנת. הרמתי את הראש וראיתי אותה שם בתוך הבר מוזגת שוטים לאנשים ומרימה איתם לחיים, אנשים שהיא לא מכירה. פשוט אישה לחתונה.</p>
+                    </div>
+                    <div class="page-footer">10</div>
+                </div>
+            </div>
+
+            <!-- עמוד 11 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <p>הערב המשיך, המשכנו לשתות, לרקוד ולצחוק, רק שלאחד מאיתנו, או יותר נכון אחת מאיתנו, פתאום התחיל להסתובב הראש. היא נשכבה על הרצפה ולא יכלה לזוז. ישבתי לידה והקשבתי לכל השטויות שיוצאות לה מהפה.</p>
+                        <p>״למה אתה אוהב אותי?״, ״מה מיוחד בי?״ ועוד כל מיני שאלות שפשוט חזרו על עצמן שוב ושוב. היא הקיאה, ושוב פעם הקיאה, ושוב פעם הקיאה, ולא הצליחה לקום.</p>
+                        <p>ניסיתי לקחת אותה למונית אבל היא לא הצליחה ללכת. כן, זה הרושם הראשוני שהיא עשתה עליי במסיבה הזאת. מבחינתי אני יוצא עם בחורה ששותה בלי סוף עד כדי אובדן יכולת ללכת.</p>
+                    </div>
+                    <div class="page-footer">11</div>
+                </div>
+            </div>
+
+            <!-- עמוד 12 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <div class="chapter-title">פרק רביעי: התחלות חדשות</div>
+                        <p>אחרי חצי שנה אני עברתי תפקיד, הפכתי להיות מפקד בבסיסי ועברתי לגור בבאר שבע ונפגשנו רק בסופ״שים. זה הרגיש קצת כמו להיות חיילים בסדיר אבל התמודדנו עם זה. כמובן דאגנו גם לצאת למקומות, לטייל, לנסוע לאילת וליערות הכרמל.</p>
+                        <p>אני לא היחיד שהתחיל דברים חדשים בזמן הזה, גם היא השתחררה והתחילה ללמוד לפסיכומטרי כדי להגשים את החלום שלה - להיות אדריכלית. למדה תוך כדי עשתה מילואים, קורס לקראת המבחנים באדריכלות, וקורס פסיכומטרי.</p>
+                        <p>ולמרות המרחק אהבה נשארה גדולה.</p>
+                    </div>
+                    <div class="page-footer">12</div>
+                </div>
+            </div>
+
+            <!-- עמוד 13 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <div class="chapter-title">פרק חמישי: פרק חדש</div>
+                        <p>המשכנו בחיינו, אני עברתי לטייסת את השכלה להיות מפקד קורס, והיא המשיכה במילואים והמשיכה לקדם את עצמה לעבר החלום שלה להיות אדריכלית.</p>
+                        <p>היא ממלאת את מקומה של מפקדת הגף שיצא לחופשת לידה. והיא, כלומר אנחנו, קיבלנו חדר קטן ב-BOQ, שבו התגוררנו ביחד במהלך התקופה. חדר קטן אבל יש בו הכל. רק חסרות בו מראות קטנות בצורת משושה.</p>
+                        <p>החלטנו לקחת את הזוגיות שלנו צעד אחד נוסף. עשינו ארוחות משפחתיות יחד, הזמנו כרטיס טיסה לחודש ליפן, וחתמנו על דירה בחיפה.</p>
+                    </div>
+                    <div class="page-footer">13</div>
+                </div>
+            </div>
+
+            <!-- עמוד 14 -->
+            <div class="page">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <div class="chapter-title">פרק שישי: מה יהיה מחר?</div>
+                        <p>עכשיו אנחנו גרים יחד, וזה הדבר הכי טוב שקרה לי!</p>
+                        <p>חווינו בזמן הזה אינספור חוויות - ...</p>
+                        <br><br>
+                    </div>
+                    <div class="page-footer">14</div>
+                </div>
+            </div>
+
+            <!-- כריכה אחורית -->
+            <div class="page page-cover" data-density="hard">
+                <div class="page-wrapper">
+                    <div class="end-page">
+                        <h1>ההמשך יבוא...</h1>
+                        <div class="decorative-line"></div>
+                        <p>❤️</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- כפתורי ניווט -->
+        <div class="controls">
+            <button id="btn-prev">&rarr; העמוד הקודם</button>
+            <button id="btn-next">העמוד הבא &larr;</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const pageFlip = new St.PageFlip(
+                document.getElementById('book-container'),
+                {
+                    width: 400,
+                    height: 580,
+                    size: "fixed",
+                    minWidth: 300,
+                    maxWidth: 500,
+                    minHeight: 400,
+                    maxHeight: 700,
+                    maxShadowOpacity: 0.5,
+                    showCover: true,
+                    mobileScrollSupport: false
+                }
+            );
+
+            // טעינת העמודים
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+            // מקשים ומקשים - עכשיו הפוכים בגלל שיקוף ה-CSS
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    pageFlip.flipNext();
+                } else if (e.key === 'ArrowRight') {
+                    pageFlip.flipPrev();
+                }
+            });
+
+            document.getElementById('btn-next').addEventListener('click', () => {
+                pageFlip.flipNext();
+            });
+
+            document.getElementById('btn-prev').addEventListener('click', () => {
+                pageFlip.flipPrev();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 
-export default function Chat({ session }) {
+export default function Chat({ session, onOpenBook }) {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
 
@@ -56,7 +56,17 @@ export default function Chat({ session }) {
     <div style={{ maxWidth: '500px', margin: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', height: '90vh' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>Top Secret 🤫</h2>
-        <button onClick={() => supabase.auth.signOut()}>התנתק</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {/* כפתור הספר החדש */}
+          <button 
+            onClick={onOpenBook} 
+            style={{ fontSize: '1.2rem', padding: '5px 12px', cursor: 'pointer' }}
+            title="הסיפור שלנו"
+          >
+            📖
+          </button>
+          <button onClick={() => supabase.auth.signOut()}>התנתק</button>
+        </div>
       </div>
 
       <div style={{ flex: 1, overflowY: 'auto', border: '1px solid #ccc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>

@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import Auth from './Auth'
 import Chat from './Chat'
+import StoryBook from './StoryBook'
 
 export default function App() {
   const [session, setSession] = useState(null)
+  const [showBook, setShowBook] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -18,9 +20,11 @@ export default function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  return (
-    <div>
-      {!session ? <Auth /> : <Chat session={session} />}
-    </div>
+  if (!session) return <Auth />
+
+  return showBook ? (
+    <StoryBook onBack={() => setShowBook(false)} />
+  ) : (
+    <Chat session={session} onOpenBook={() => setShowBook(true)} />
   )
 }
