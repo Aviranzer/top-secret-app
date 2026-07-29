@@ -1,9 +1,26 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import HTMLFlipBook from 'react-pageflip'
 import './StoryBook.css'
 
+const BASE_WIDTH = 380
+const BASE_HEIGHT = 550
+const SIDE_MARGIN = 40
+
+function getBookSize() {
+  const width = Math.round(Math.min(BASE_WIDTH, window.innerWidth - SIDE_MARGIN))
+  const height = Math.round(width * (BASE_HEIGHT / BASE_WIDTH))
+  return { width, height }
+}
+
 export default function StoryBook({ onBack }) {
   const bookRef = useRef()
+  const [{ width, height }, setSize] = useState(getBookSize)
+
+  useEffect(() => {
+    const onResize = () => setSize(getBookSize())
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   return (
     <div className="storybook-body">
@@ -16,13 +33,9 @@ export default function StoryBook({ onBack }) {
         {/* אלמנט הספר */}
         <div id="book-container">
           <HTMLFlipBook
-            width={380}
-            height={550}
+            width={width}
+            height={height}
             size="fixed"
-            minWidth={300}
-            maxWidth={500}
-            minHeight={400}
-            maxHeight={700}
             maxShadowOpacity={0.5}
             showCover={true}
             mobileScrollSupport={false}

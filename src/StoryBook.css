@@ -2,16 +2,26 @@
   background: #1a1a1a;
   background-image: radial-gradient(#2c2c2c 1px, transparent 0);
   background-size: 24px 24px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Frank Ruhl Libre', 'David Libre', 'Noto Serif Hebrew', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  min-height: 100svh;
   color: #333;
   direction: rtl;
   padding: 20px 0;
   position: relative;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  box-sizing: border-box;
+}
+
+.storybook-body *,
+.storybook-body *::before,
+.storybook-body *::after {
+  box-sizing: border-box;
 }
 
 .back-btn {
@@ -41,6 +51,10 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   background-color: #fcf8f2;
   transform: scaleX(-1);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* החזרת התוכן לכיוון המקורי */
